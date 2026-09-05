@@ -73,9 +73,9 @@ in
     errors.mkErrorMessage [
       "value does not conform to type (${type.name})"
       "transform: ${transformType}"
-      "error: noValueErr"
       "expected full type: ${type.definitionName}\n"
       "got value: ${toRepr valueObj.value}"
       "expected type: ${type.name}"
+      "error: typeCheckErr"
     ];
 }

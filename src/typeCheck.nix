@@ -20,10 +20,18 @@
           if result != result then result else result;
     };
 
-  defaultTypeCheck = typeCheck.mkTypeCheckStep {
-    type = "defaultTypeCheck";
-    typeCheckMethod = { valueObj, context, ... }@inputs:
-      if context.expectedType.forceCheck valueObj.value
-      then valueObj else errors.typeCheckErr inputs;
+  # -------------------------
+  # Type Checks
+  # -------------------------
+
+  conditionTypeCheck = condition: typeCheck.mkTypeCheckStep {
+    type = "conditionTypeCheck";
+    typeCheckMethod = { valueObj, ... }@inputs:
+      if condition inputs then valueObj
+      else errors.typeCheckErr inputs;
   };
+
+  defaultTypeCheck =
+    typeCheck.conditionTypeCheck
+    ({ context, valueObj, ... }: context.expectedType.forceCheck valueObj.value);
 }
