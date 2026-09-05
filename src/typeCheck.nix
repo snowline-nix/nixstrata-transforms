@@ -21,6 +21,21 @@
     };
 
   # -------------------------
+  # Condition Expressions
+  # -------------------------
+
+  ifElseHasStaticType = { valueType, nonStaticCheck, staticCheck }:
+    if valueType == null then nonStaticCheck else staticCheck;
+
+  hasValidStaticType = { valueObj, expectedType, nonStaticCheck }:
+    let valueType = valueObj.staticType; in
+    typeCheck.ifElseHasStaticType
+    {
+      inherit nonStaticCheck valueType;
+      staticCheck = valueType.definitionName == expectedType.definitionName;
+    };
+
+  # -------------------------
   # Type Checks
   # -------------------------
 
