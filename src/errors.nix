@@ -33,11 +33,11 @@ in
   mergeErr = {
     message,
     valueObjs,
-    evalInputs,
+    context,
     transformType,
     ...
   }:
-    let type = evalInputs.type; in
+    let type = context.expectedType; in
     errors.mkErrorMessage [
       (message + " (mergeErr)")
       "transform: ${transformType}"
@@ -49,11 +49,11 @@ in
 
   noValueErr = {
     valueObj,
-    evalInputs,
+    context,
     transformType,
     ...
   }:
-    let type = evalInputs.expectedType; in
+    let type = context.expectedType; in
     errors.mkErrorMessage [
       "no value declared for value definition"
       "expected full type: ${type.definitionName}\n"
@@ -65,11 +65,11 @@ in
 
   typeCheckErr = {
     valueObj,
-    evalInputs,
+    context,
     transformType,
     ...
   }:
-    let type = evalInputs.expectedType; in
+    let type = context.expectedType; in
     errors.mkErrorMessage [
       "value does not conform to type (${type.name})"
       "transform: ${transformType}"

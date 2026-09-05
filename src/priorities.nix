@@ -9,10 +9,10 @@
 {
   prioritizeLowerStep = transforms.mkTransformStep {
     type = "prioritizeLowerStep";
-    evalPrev = { prevOutput, ... }:
+    evalPrev = { output, ... }:
       let
         minPriority =
-          accForEachElem prevOutput
+          accForEachElem output
           9223372036854775807
           (min: valueObj:
             let priority = valueObj.priority; in
@@ -21,6 +21,6 @@
           );
       in
         keepElemsIf (valueObj: valueObj.priority == minPriority)
-        prevOutput;
+        output;
   };
 }

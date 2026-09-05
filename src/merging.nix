@@ -13,21 +13,21 @@
   mkMergeMethodStep = { type, mergeMethod }:
     transforms.mkTransformStep {
       type = "mergeMethod.${type}";
-      evalPrev = { prevOutput, evalInputs, _type, ... }:
+      evalPrev = { output, context, currentTransformType, ... }:
         let
-          nOfValues = lengthOfList prevOutput;
+          nOfValues = lengthOfList output;
           missingValueErr = errors.mergeErr {
             message = "no value declerations";
-            valueObjs = prevOutput;
-            transformType = _type;
-            inherit evalInputs;
+            valueObjs = output;
+            transformType = currentTransformType;
+            inherit context;
           };
         in
           if nOfValues < 1 then missingValueErr else
           mergeMethod {
-            valueObjs = prevOutput;
-            transformType = _type;
-            inherit evalInputs;
+            valueObjs = output;
+            transformType = currentTransformType;
+            inherit context;
           };
     };
 
@@ -42,11 +42,11 @@
 
   noMerge = merging.mkMergeMethodStep {
     type = "noMerge";
-    mergeMethod = { valueObjs, evalInputs, transformType, ... }:
+    mergeMethod = { valueObjs, context, transformType, ... }:
       if lengthOfList valueObjs == 1 then (elemAt 0 valueObjs).value else
       errors.mergeErr {
-        message = "type ${evalInputs.expectedType.name} does not support merging multiple value declarations";
-        inherit valueObjs evalInputs transformType;
+        message = "type ${context.expectedType.name} does not support merging multiple value declarations";
+        inherit valueObjs context transformType;
       };
   };
 

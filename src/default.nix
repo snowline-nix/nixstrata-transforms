@@ -4,16 +4,22 @@ inputs:
   lib = let
 
     sublibs = {
+      constructors = import ./constructors.nix sublibInputs;
       errors = import ./errors.nix sublibInputs;
       merging = import ./merging.nix sublibInputs;
       priorities = import ./priorities.nix sublibInputs;
-      transforms = import ./transforms.nix sublibInputs;
       typeCheck = import ./typeCheck.nix sublibInputs;
       valueObject = import ./valueObject.nix sublibInputs;
     };
 
     sublibInputs = inputs.nixlib.lib // sublibs;
   in
-    sublibs;
+    sublibs // {
+      inherit (sublibs.constructors)
+        mkInitialInputs
+        mkTransformStep
+        remapOutputStep
+        ;
+    };
 
 }

@@ -2,21 +2,20 @@
 {
   defaultValueObj = transforms.remapOutputStep {
     type = "defaultValueObj";
-    evalElem = { elem, evalInputs, transformType, ... }:
+    evalElem = { elem, context, currentTransformType, ... }:
       let
-        valueObj =
-          if (elem._type or null) == default._type then default // elem
-          else default // { value = elem; };
-
         default = {
           _type = "valueObject";
           staticType = null;
           priority = 500;
           value = errors.noValueErr {
-            inherit valueObj evalInputs transformType;
+            inherit context;
+            valueObj = elem;
+            transformType = currentTransformType;
           };
         };
       in
-        valueObj;
+        if (elem._type or null) == default._type then default // elem
+        else default // { value = elem; };
   };
 }
