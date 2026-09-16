@@ -1,25 +1,22 @@
-inputs:
 {
+  nixlib-general,
+  nixllization,
 
+  ...
+}:
+{
   lib = let
-
-    sublibs = {
-      constructors = import ./constructors.nix sublibInputs;
-      errors = import ./errors.nix sublibInputs;
-      merging = import ./merging.nix sublibInputs;
-      priorities = import ./priorities.nix sublibInputs;
-      typeCheck = import ./typeCheck.nix sublibInputs;
-      valueObject = import ./valueObject.nix sublibInputs;
+    inputs = nixlib-general.lib // nixllization.lib // lib;
+    lib = {
+      errors = import ./errors.nix inputs;
+      initializers = import ./initializers.nix;
+      steps = import ./steps.nix inputs;
+      transformers =
+        import ./transformers/merging.nix inputs //
+        import ./transformers/typeCheck.nix inputs //
+        import ./transformers/priorities.nix inputs //
+        import ./transformers/valueObject.nix inputs;
     };
-
-    sublibInputs = inputs.nixlib.lib // sublibs;
   in
-    sublibs // {
-      inherit (sublibs.constructors)
-        mkInitialInputs
-        mkTransformStep
-        remapOutputStep
-        ;
-    };
-
+    lib;
 }

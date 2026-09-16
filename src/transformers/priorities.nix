@@ -1,5 +1,5 @@
 {
-  transforms,
+  mkStep,
 
   accForEachElem,
   keepElemsIf,
@@ -7,12 +7,12 @@
   ...
 }:
 {
-  prioritizeLowerStep = transforms.mkTransformStep {
-    type = "prioritizeLowerStep";
-    evalPrev = { output, ... }:
+  prioritizeLowerStep = mkStep {
+    identifier = "priorities.prioritizeLower";
+    operation = { declarations, ... }:
       let
         minPriority =
-          accForEachElem output
+          accForEachElem declarations
           9223372036854775807
           (min: valueObj:
             let priority = valueObj.priority; in
@@ -21,6 +21,6 @@
           );
       in
         keepElemsIf (valueObj: valueObj.priority == minPriority)
-        output;
+        declarations;
   };
 }
