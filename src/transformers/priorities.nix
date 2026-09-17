@@ -1,5 +1,5 @@
 {
-  mkStep,
+  steps,
 
   accForEachElem,
   keepElemsIf,
@@ -7,7 +7,7 @@
   ...
 }:
 {
-  prioritizeLowerStep = mkStep {
+  prioritizeLowerStep = steps.mkTypeTransformStep {
     identifier = "priorities.prioritizeLower";
     operation = { declarations, ... }:
       let
