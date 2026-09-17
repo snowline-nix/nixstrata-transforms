@@ -28,17 +28,16 @@ in
   typeCheckErr = { context, valueObj, ... }: let
     hasPath = context ? path;
     type = context.type;
-    summary = "value does not conform to type `${type.name}`${if hasPath then " at `${context.path}`" else ""}";
+    summary = "type mismatch `${type.name}`${if hasPath then " at `${context.path}`" else ""}";
     value = toString valueObj.value;
   in
     throw ''
       ${summary}
       ${getDecls context}
       This type requires a value conforming to:
-        ${type.fullDefinitionName}
-      ${
-        if type.description != null then "\n${type.description}\n" else ""
-      }
+
+      `${type.name}`${if type.description != null then " - ${type.description}" else ""}
+
       The value `${value}` does not conform to the${if context ? option then " option" else ""} type `${type.name}`.
       ${
         if hasPath then "At: `${context.path} = ${value}`" else ""
