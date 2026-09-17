@@ -37,9 +37,11 @@
     transform = steps.mkTypeRemapStep {
       inherit description;
       identifier = "typeCheck.${identifier}";
-      operation = { context, declarations, decl, ... }:
-        let inputs = { inherit context transform declarations; valueObj = decl; }; in
-        if operation inputs then decl else errors.typeCheckErr inputs;
+      operation = { context, declarations, decl, ... }: let
+        inputs = { inherit context transform declarations; valueObj = decl; };
+        value = if operation inputs then decl else errors.typeCheckErr inputs;
+      in
+        builtins.seq value value;
     };
   in
     transform;
