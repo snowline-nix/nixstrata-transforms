@@ -1,4 +1,4 @@
-{ toString, ... }:
+{ toRepr, ... }:
 let
   getDecls = context:
     if context ? module
@@ -29,7 +29,7 @@ in
     hasPath = context ? path;
     type = context.type;
     summary = "type mismatch `${type.name}`${if hasPath then " at `${context.path}`" else ""}";
-    value = toString valueObj.value;
+    value = toRepr valueObj.value;
   in
     throw ''
       ${summary}
