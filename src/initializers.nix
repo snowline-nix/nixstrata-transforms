@@ -7,13 +7,8 @@
     path ? null,
     transform ? "initializer.typeTransform",
     ...
-  }@inputs: {
-    context = {
-      ${if inputs ? option then "type" else null} = type;
-      ${if inputs ? option then "option" else null} = option;
-      ${if inputs ? module then "module" else null} = module;
-      ${if inputs ? path then "path" else null} = path;
-    };
+  }: {
+    context = { inherit type module option path; };
     inherit transform;
     declarations = values;
   };
