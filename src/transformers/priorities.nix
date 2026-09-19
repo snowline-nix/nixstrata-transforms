@@ -1,9 +1,7 @@
+{ steps, ... }:
 {
-  steps,
-
   accForEachElem,
   keepElemsIf,
-
   ...
 }:
 {

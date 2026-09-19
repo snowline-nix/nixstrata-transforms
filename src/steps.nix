@@ -1,11 +1,8 @@
+{ errors, steps, ... }:
+{ mkStep, ... }:
 {
-  errors, steps,
-
-  mkStep,
-
   lengthOfList,
   remapElems,
-
   ...
 }:
 {
