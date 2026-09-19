@@ -13,16 +13,15 @@ let
     );
 
   mkModuleError = { transform, context, content, summary, pathInSummary ? true }: let
-    hasPath = context ? path;
     path = getPath context.path;
-    summary' = summary + (if pathInSummary && hasPath then " at `${path}`" else "");
-    at = (if context ? module then "\nIn: ${context.module.sourcePath}\n" else "") + (if hasPath then "\nAt: `${path}`\n" else "");
+    summary' = summary + (if pathInSummary then " at `${path}`" else "");
+    at = (if context ? module then "\nIn: ${context.module.sourcePath}\n" else "") + "\nAt: `${path}`\n";
   in
     throw ''
       ${summary'}
       While evaluating: '${transform.identifier}'
       ${at}
-      ${content { inherit hasPath path; }}
+      ${content { inherit path; }}
 
       error: ${summary'}
     '';
@@ -31,14 +30,14 @@ in
   noValueErr = { context, transform, ... }: mkModuleError {
     inherit context transform;
     summary = "no value was declared";
-    content = { hasPath, path, ... }: ''
+    content = { path, ... }: ''
       ${
         if context ? type
         then "Type (${context.type.name}) requires a value to evaluate."
         else "Transform step ('${transform.identifier}') requires a value to evaluate"
       }
 
-      No value was declared for one of the declarations${if hasPath then " of ${path}" else ""}.
+      No value was declared for one of the declarations of ${path}.
     '';
   };
 
@@ -63,8 +62,8 @@ in
   mergeErr.missingDeclarationsErr = { context, transform, ... }: mkModuleError {
     inherit context transform;
     summary = "no values were declared";
-    content = { hasPath, path, ... }: ''
-      No values were declared${if hasPath then " for ${path}" else ""}.
+    content = { path, ... }: ''
+      No values were declared for ${path}.
     '';
   };
 
@@ -80,10 +79,10 @@ in
     inherit context transform;
     pathInSummary = false;
     summary = (genMsg false) + "does not support merging";
-    content = { hasPath, path, ... }: ''
+    content = { path, ... }: ''
       ${genMsg true} does not support merging multiple value declarations.
 
-      No values were declared${if hasPath then " for ${path}" else ""}.
+      No values were declared for ${path}.
     '';
   };
 }
