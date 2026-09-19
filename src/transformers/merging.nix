@@ -1,12 +1,10 @@
+let inherit (builtins) zipAttrsWith; in
+{ errors, steps, ... }:
 {
-  errors,
-  steps,
-
   elemAt,
   joinLists,
   lengthOfList,
   remapElems,
-
   ...
 }:
 {
@@ -23,4 +21,9 @@
   };
 
   staticNull = steps.mkStaticTypeMergeMethodStep null;
+
+  attrsAsDecls = steps.mkTypeMergeMethodStep {
+    identifier = "attrsAsDecls";
+    operation = { valueObjs, ... }: zipAttrsWith (_: values: values) (remapElems valueObjs (v: v.value));
+  };
 }

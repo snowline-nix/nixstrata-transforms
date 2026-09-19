@@ -1,6 +1,6 @@
+let inherit (builtins) attrNames; in
 { steps, ... }:
 { isAttrset, ... }:
-let inherit (builtins) attrNames; in
 {
   defaultTypeCheck = steps.mkConditionalTypeCheckStep {
     identifier = "default";
