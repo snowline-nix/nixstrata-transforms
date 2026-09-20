@@ -14,15 +14,15 @@ let
 
   mkModuleError = { transform, context, content, summary, pathInSummary ? true }: let
     path = getPath context.path;
-    summary' = summary + (if pathInSummary then " at `${path}`" else "");
-    at = (if context ? module then "\nIn: ${context.module.sourcePath}\n" else "") + "\nAt: `${path}`\n";
+    summary' = summary + (if pathInSummary then " at '${path}'" else "");
+    at = (if context ? module then "\nIn: ${context.module.sourcePath}\n" else "") + "\nAt: '${path}'\n";
   in
     throw ''
       ${summary'}
+
       While evaluating: '${transform.identifier}'
       ${at}
       ${content { inherit path; }}
-
       error: ${summary'}
     '';
 in
