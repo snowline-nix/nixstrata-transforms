@@ -63,7 +63,7 @@ in
     inherit context transform;
     summary = "no values were declared";
     content = { path, ... }: ''
-      No values were declared for ${path}.
+      No values were declared for '${path}'.
     '';
   };
 
@@ -78,11 +78,9 @@ in
   in mkModuleError {
     inherit context transform;
     pathInSummary = false;
-    summary = (genMsg false) + "does not support merging";
-    content = { path, ... }: ''
+    summary = (genMsg false) + " does not support merging";
+    content = _: ''
       ${genMsg true} does not support merging multiple value declarations.
-
-      No values were declared for ${path}.
     '';
   };
 }
