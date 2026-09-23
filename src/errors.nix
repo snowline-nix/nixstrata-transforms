@@ -1,4 +1,4 @@
-{ toRepr, remapElems, joinStringsSep, ... }:
+{ joinStringsSep, lengthOfList, remapElems, toRepr, ... }:
 let
   getPath = path:
     builtins.substring 1 (-1)
@@ -14,8 +14,11 @@ let
 
   mkModuleError = { transform, context, content, summary, pathInSummary ? true }: let
     path = getPath context.path;
-    summary' = summary + (if pathInSummary then " at '${path}'" else "");
-    at = (if context ? module then "\nIn: ${context.module.sourcePath}\n" else "") + "\nAt: '${path}'\n";
+    hasPath = (lengthOfList context.path) == 0;
+    summary' = summary + (if pathInSummary && hasPath then " at '${path}'" else "");
+    at =
+      let x = if context ? module then "\nIn: ${context.module.sourcePath}\n" else ""; in
+      if hasPath then x + "\nAt: '${path}'\n" else x;
   in
     throw ''
       ${summary'}
